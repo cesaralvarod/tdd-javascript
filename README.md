@@ -8,7 +8,7 @@ Test-Driven Development (TDD) is a technique for building software that guides s
 
 Developers write unit tests (NOT testers) and then coding.
 
-![TDD](./tdd.jpeg)
+![TDD](./tdd.jpg)
 
 ## TDD? But I already write unit tests!
 
