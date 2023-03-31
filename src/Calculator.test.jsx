@@ -1,46 +1,6 @@
-import { useState } from 'react'
 import { render, screen, cleanup, fireEvent } from '@testing-library/react'
 import { describe, it, afterEach, expect } from 'vitest'
-
-const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-const rows = [[7, 8, 9], [4, 5, 6], [1, 2, 3], [0]]
-
-const operations = ['+', '-', '*', '/']
-
-const equalSign = '='
-
-const Calculator = () => {
-  const [value, setValue] = useState('')
-
-  const createHandleClick = op => () => setValue(value.concat(op))
-
-  return (
-    <>
-      <h1>Calculator</h1>
-      <input value={value} readOnly />
-      <div role="grid">
-        {rows.map((row, idx) => (
-          <div role="row" key={idx}>
-            {row.map(number => (
-              <button onClick={createHandleClick(number)} key={number}>
-                {number}
-              </button>
-            ))}
-          </div>
-        ))}
-
-        {operations.map(operation => (
-          <button onClick={createHandleClick(operation)} key={operation}>
-            {operation}
-          </button>
-        ))}
-
-        <span>{equalSign}</span>
-      </div>
-    </>
-  )
-}
+import { Calculator, numbers, operations, equalSign } from './Calculator'
 
 describe('calculator', () => {
   afterEach(cleanup)
@@ -95,9 +55,9 @@ describe('calculator', () => {
     render(<Calculator />)
 
     const one = screen.getByText('1')
-    fireEvent.click(one)
-
     const input = screen.getByRole('textbox')
+
+    fireEvent.click(one)
 
     expect(input.value).toBe('1')
   })
@@ -106,15 +66,13 @@ describe('calculator', () => {
     render(<Calculator />)
 
     const one = screen.getByText('1')
-    fireEvent.click(one)
-
     const two = screen.getByText('2')
-    fireEvent.click(two)
-
     const three = screen.getByText('3')
-    fireEvent.click(three)
-
     const input = screen.getByRole('textbox')
+
+    fireEvent.click(one)
+    fireEvent.click(two)
+    fireEvent.click(three)
 
     expect(input.value).toBe('123')
   })
@@ -123,15 +81,52 @@ describe('calculator', () => {
     render(<Calculator />)
 
     const one = screen.getByText('1')
-    fireEvent.click(one)
 
     const plus = screen.getByText('+')
-    fireEvent.click(plus)
-
-    fireEvent.click(one)
-
     const input = screen.getByRole('textbox')
 
+    fireEvent.click(one)
+    fireEvent.click(plus)
+    fireEvent.click(one)
+
     expect(input.value).toBe('1+1')
+  })
+
+  it('should calculate based on user input and show the calculator', () => {
+    render(<Calculator />)
+
+    const one = screen.getByText('1')
+    const plus = screen.getByText('+')
+    const equal = screen.getByText(equalSign)
+    const input = screen.getByRole('textbox')
+
+    fireEvent.click(one)
+    fireEvent.click(plus)
+    fireEvent.click(one)
+    fireEvent.click(equal)
+
+    expect(input.value).toBe('2')
+  })
+
+  it('should do two calculations', () => {
+    render(<Calculator />)
+
+    const one = screen.getByText('1')
+    const plus = screen.getByText('+')
+    const equal = screen.getByText(equalSign)
+    const input = screen.getByRole('textbox')
+
+    // 1+1
+    fireEvent.click(one)
+    fireEvent.click(plus)
+    fireEvent.click(one)
+    fireEvent.click(equal)
+
+    // 2+1
+    fireEvent.click(plus)
+    fireEvent.click(one)
+    fireEvent.click(equal)
+
+    expect(input.value).toBe('3')
   })
 })
