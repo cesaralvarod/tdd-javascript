@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fizzbuzz } from '../src/fizzbuzz'
+import { fizzbuzz } from '../fizzbuzz'
 
 describe('fizzbuzz', () => {
   it('should be a function', () => {
